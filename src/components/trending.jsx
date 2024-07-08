@@ -23,7 +23,7 @@ const Trending = () => {
             <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-white bg-opacity-50">
               <h2 className="text-2xl font-bold">{service.title}</h2>
-              <p className="mt-2 text-white">{service.description}</p>
+              <p className="mt-2 ">{service.description}</p>
             </div>
           </div>
         ))}

@@ -9,6 +9,7 @@ import TopSellers from './components/top-sellers';
 import CustomersReview from './components/customers-review';
 import Subscriptions from './components/logobelt';
 import SubscribeComponent from './components/subscribe';
+import Footer from './components/footer';
 
 function App() {
   const [isNotificationVisible, setIsNotificationVisible] = useState(true);
@@ -26,6 +27,7 @@ function App() {
         <CustomersReview/>
         <Subscriptions/>
         <SubscribeComponent/>
+        <Footer/>
     </div>
   );
 }
