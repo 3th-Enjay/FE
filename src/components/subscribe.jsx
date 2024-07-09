@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'; 
-import subscribe from '../assets/subscribe/subscribe.png'
+
 
 const SubscribeComponent = () => {
   return (
@@ -28,13 +28,6 @@ const SubscribeComponent = () => {
               Subscribe
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* Image Half */}
-      <div className="flex justify-center w-full md:w-1/2 lg:w-1/2 xl:w-1/2 mt-10">
-        <div className="relative w-full h-64 md:h-96 lg:h-128 xl:h-160">
-          <img src={subscribe} alt="Your Image Description" className="rounded-lg  w-full h-full object-right" />
         </div>
       </div>
     </div>

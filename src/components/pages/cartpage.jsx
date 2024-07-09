@@ -33,7 +33,7 @@ const Cart = () => {
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border">
           <thead>
-            <tr className="w-full bg-gray-100 text-left">
+            <tr className="w-full bg-white text-left">
               <th className="py-2 px-4 border">Select</th>
               <th className="py-2 px-4 border">Items</th>
               <th className="py-2 px-4 border">Quantity</th>

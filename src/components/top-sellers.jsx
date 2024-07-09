@@ -7,9 +7,11 @@ import ventulo from '../assets/topsellers/ventalo.png';
 import casualprinted from '../assets/topsellers/casual-printed.png';
 import solyhux from '../assets/topsellers/mens-plaid.png';
 import pokemonbag from '../assets/topsellers/pokemonbag.png';
+import { useNavigate } from 'react-router-dom';
 
 
 const TopSellers = () => {
+  const naviate = useNavigate()
   const productCards = [
     {
       item: "Mloye Purse",
@@ -101,7 +103,7 @@ const TopSellers = () => {
         ))}
       </div>
       <div className="flex justify-center items-center ">
-        <button className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800">Shop Now</button>
+        <button onClick= {()=>naviate('/products')} className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800">Shop Now</button>
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const NavBar = () => {
       <div className="hidden md:flex space-x-4 md:space-x-8">
         <div className="relative">
           <select className="w-full bg-transparent border-none outline-none p-2 rounded-md text-black hover:bg-white focus:ring-0">
-            <option value="">Select Language</option>
+            
             <option value="english">English</option>
             <option value="french">French</option>
             <option value="german">German</option>
@@ -34,7 +34,7 @@ const NavBar = () => {
         </div>
         <div className="relative">
           <select className="w-full bg-transparent border-none outline-none p-2 rounded-md text-black hover:bg-white focus:ring-0">
-            <option value="">Select Currency</option>
+            
             <option value="ngn">NGN</option>
             <option value="gbp">GBP</option>
             <option value="eur">EUR</option>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/TradeTrail.png';
 
 const NavHeader = () => {
+  const navigate = useNavigate()
   return (
     <header className="relative bg-white text-black flex justify-between items-center h-16 px-4 md:px-10 pt-2">
       <div className="flex items-center space-x-4 md:space-x-10">
@@ -21,7 +22,7 @@ const NavHeader = () => {
       <div className="flex items-center space-x-4 md:space-x-8">
         {/* Icons */}
         <FaSearch className="h-6 w-6 text-gray-500 cursor-pointer" />
-        <FaShoppingBag className="h-6 w-6 text-gray-500 cursor-pointer" />
+        <FaShoppingBag onClick={()=>navigate('/cart')} className="h-6 w-6 text-gray-500 cursor-pointer" />
         <FaUser className="h-6 w-6 text-gray-500 cursor-pointer" />
       </div>
     </header>
