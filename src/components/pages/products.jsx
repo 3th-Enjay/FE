@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigate} from 'react-router-dom'
 import mloyepurse from './imgs/topsellers/mlouypurse.png'
 import leatherjacket from './imgs/topsellers/leather-jacket.png';
 import cuffedbean from './imgs/topsellers/cuffed-bean.png';
@@ -10,6 +11,8 @@ import pokemonbag from './imgs/topsellers/pokemonbag.png';
 
 
 const Products = () => {
+  const navigate = useNavigate()
+  
   const productCards = [
     {
       item: "Mloye Purse",
@@ -103,7 +106,7 @@ const Products = () => {
         ))}
       </div>
       <div className="flex justify-center items-center ">
-        <button className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800">Check Out</button>
+        <button onClick ={()=>navigate('/cart')} className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800">Add to Cart</button>
       </div>
     </div>
   );
