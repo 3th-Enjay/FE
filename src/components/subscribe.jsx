@@ -5,7 +5,7 @@ import subscribe from '../assets/subscribe/subscribe.png'
 
 const SubscribeComponent = () => {
   return (
-    <div className="bg-green-800 flex  items-center justify-center text-white">
+    <div className="relative bg-green-800 flex  items-center justify-center text-white">
       <div className="w-full max-w-md my-10 rounded-lg">
         {/* Heading and Subheading for Email Input */}
         <div className="flex flex-col items-center">
