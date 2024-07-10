@@ -11,6 +11,7 @@ import Products from './components/pages/products.jsx';
 import RootPage from './components/pages/RootPage.jsx';
 import HomePage from './components/pages/homepage.jsx';
 import Cart from './components/pages/cartpage.jsx';
+import { CartProvider } from './components/hooks/context.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <CartProvider>
     <RouterProvider router={router}/>
+    </CartProvider>
   </React.StrictMode>,
 )
