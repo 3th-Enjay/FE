@@ -12,6 +12,7 @@ import RootPage from './components/pages/RootPage.jsx';
 import HomePage from './components/pages/homepage.jsx';
 import Cart from './components/pages/cartpage.jsx';
 import { CartProvider } from './components/hooks/context.jsx';
+import Checkout from './components/pages/checkout.jsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path:"/checkout",
+        element: <Checkout/>
       }
       
   
