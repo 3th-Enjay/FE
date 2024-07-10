@@ -4,7 +4,7 @@ import { useCart } from '../hooks/context.jsx';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartItems, total } = useCart();
+  const { cartItems, total, removeFromCart } = useCart();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -19,6 +19,7 @@ const Cart = () => {
               <th className="py-2 px-4 border">Size</th>
               <th className="py-2 px-4 border">Color</th>
               <th className="py-2 px-4 border">Price</th>
+              <th className="py-2 px-4 border">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +38,9 @@ const Cart = () => {
                 <td className="py-2 px-4 border text-center">{item.size || 'N/A'}</td>
                 <td className="py-2 px-4 border text-center">{item.color || 'N/A'}</td>
                 <td className="py-2 px-4 border text-center">{item.price}</td>
+                <td className="py-2 px-4 border text-center">
+                  <button onClick={() => removeFromCart(index)} className="text-red-600 hover:text-red-800">Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>
