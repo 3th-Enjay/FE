@@ -12,7 +12,7 @@ const NavHeader = () => {
   const handleSearch = () => {
     setShowInput(false);
     if (searchQuery.trim()) {
-      navigate(`/products?search=${searchQuery}`);
+      navigate(`/productspage?search=${searchQuery}`);
     }
   };
 

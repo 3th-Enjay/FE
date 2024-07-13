@@ -1,38 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaShoppingCart, FaSpinner } from 'react-icons/fa';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/context.jsx';
 
 const TopSellers = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { addToCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [notification, setNotification] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 10;
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('/products/', {
+        const response = await axios.get('https://timbu-get-all-products.reavdev.workers.dev/', {
           params: {
             organization_id: '3e18e5e79afc4cac99ac8888a3604ad6',
             reverse_sort: false,
-            page: 1,
-            size: 10
+            Appid: 'MWI4OACDIIGXES0',
+            Apikey: '646be48f0b9c48808c9d50f57c7a011920240713004633461578',
+            page: currentPage,
+            size: productsPerPage,
           },
-          headers: {
-            'Apikey': '646be48f0b9c48808c9d50f57c7a011920240713004633461578',
-            'Appid': 'MWI4OACDIIGXES0'
-          }
         });
+
+        console.log('API Response:', response.data);
         setProducts(response.data);
-        setFilteredProducts(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -41,20 +39,7 @@ const TopSellers = () => {
     };
 
     fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    const query = new URLSearchParams(location.search).get('search');
-    setSearchQuery(query || '');
-    if (query) {
-      const results = Array.isArray(products) ? products.filter(product =>
-        product.name.toLowerCase().includes(query.toLowerCase())
-      ) : [];
-      setFilteredProducts(results);
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [location.search, products]);
+  }, [currentPage]);
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -72,10 +57,11 @@ const TopSellers = () => {
     }, 3000);
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(`/products?search=${searchQuery}`);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   return (
     <div className="relative container mx-auto px-4">
@@ -99,23 +85,8 @@ const TopSellers = () => {
             <span className="text-gray-700">Products</span>
           </div>
           <h1 className="text-4xl font-bold text-center my-8">Featured Products</h1>
-          <form onSubmit={handleSearch} className="mb-4">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products..."
-              className="border-b-2 border-gray-300 focus:outline-none focus:border-gray-500 mr-2"
-            />
-            <button
-              type="submit"
-              className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-800"
-            >
-              Search
-            </button>
-          </form>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredProducts.map((product, index) => (
+            {Array.isArray(products) && products.map((product, index) => (
               <div
                 key={index}
                 className="max-w-sm rounded overflow-hidden m-2 relative cursor-pointer"
@@ -130,21 +101,24 @@ const TopSellers = () => {
                 />
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{product.name}</div>
+                  <p className="text-gray-700 text-base">{product.description}</p>
                   <p className="text-gray-700 text-base">{product.price}</p>
-                </div>
-                <div className="flex space-between gap-2 px-6">
-                  {product.colors.map((color, i) => (
-                    <span
-                      key={i}
-                      className={`inline-block align-middle select-none transition duration-150 ease-in-out rounded-full w-6 h-6 mb-1 cursor-pointer hover:border-black border-2`}
-                      style={{ backgroundColor: color, borderColor: 'transparent' }}
-                    ></span>
-                  ))}
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={`mx-2 px-4 py-2 rounded ${currentPage === i + 1 ? 'bg-gray-900 text-white' : 'bg-gray-300 text-black'} hover:bg-gray-800 hover:text-white`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          <div className="flex justify-center items-center mt-4">
             <button
               onClick={() => navigate('/cart')}
               className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800"
@@ -168,16 +142,8 @@ const TopSellers = () => {
                     className="mx-auto my-4 w-full h-64 object-cover"
                   />
                   <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
+                  <p className="text-gray-700 mb-4">{selectedProduct.description}</p>
                   <p className="text-gray-700 mb-4">{selectedProduct.price}</p>
-                  <div className="flex justify-center gap-2 mb-4">
-                    {selectedProduct.colors.map((color, i) => (
-                      <span
-                        key={i}
-                        className={`inline-block align-middle select-none transition duration-150 ease-in-out rounded-full w-6 h-6 mb-1 cursor-pointer hover:border-black border-2`}
-                        style={{ backgroundColor: color, borderColor: 'transparent' }}
-                      ></span>
-                    ))}
-                  </div>
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
                     className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800 flex items-center justify-center mx-auto"
