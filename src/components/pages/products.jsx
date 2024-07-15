@@ -1,73 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaShoppingCart, FaSpinner } from 'react-icons/fa';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/context.jsx';
 
 const TopSellers = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { addToCart } = useCart();
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [notification, setNotification] = useState('');
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
+  const [items, setItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Fetch items from the API
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchItems = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('https://timbu-get-all-products.reavdev.workers.dev/', {
+        const response = await axios.get('https://timbu-get-all-products.reavdev.workers.dev/?organization_id=3e18e5e79afc4cac99ac8888a3604ad6&reverse_sort=false&Appid=MWI4OACDIIGXES0&Apikey=646be48f0b9c48808c9d50f57c7a011920240713004633461578&page=1&size=30', {
           params: {
-            organization_id: '3e18e5e79afc4cac99ac8888a3604ad6',
-            reverse_sort: false,
-            page: page,
-            size: itemsPerPage
+            page: currentPage,
+            size: itemsPerPage,
           },
-          headers: {
-            'Apikey': import.meta.env.VITE_APP_API_KEY,
-            'Appid': import.meta.env.VITE_APP_APP_ID
-          }
         });
 
         console.log('API Response:', response.data);
-        const dataArray = Array.isArray(response.data) ? response.data : [];
-        setProducts(dataArray);
+        setItems(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching items:', error);
         setLoading(false);
       }
     };
 
-    fetchProducts();
-  }, [page]);
+    fetchItems();
+  }, [currentPage]);
 
-  const handleProductClick = (product) => {
-    setSelectedProduct(product);
+  // Handle item click to show modal
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
   };
 
+  // Handle modal close
   const handleCloseModal = () => {
-    setSelectedProduct(null);
+    setSelectedItem(null);
   };
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-    setNotification(`${product.name} has been added to your cart`);
+  // Handle add to cart and show notification
+  const handleAddToCart = (item) => {
+    addToCart(item);
+    setNotification(`${item.name} has been added to your cart`);
     setTimeout(() => {
       setNotification('');
     }, 3000);
   };
 
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
+  // Handle page change for pagination
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
-  const handlePrevPage = () => {
-    setPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
+  // Calculate total pages for pagination
+  const totalPages = Math.ceil(items.length / itemsPerPage);
 
   return (
     <div className="relative container mx-auto px-4">
@@ -81,72 +77,80 @@ const TopSellers = () => {
       ) : (
         <>
           <div className="text-left mt-4">
-            <span className="text-gray-500 cursor-pointer hover:text-gray-700" onClick={() => navigate('/')}>
+            <span
+              className="text-gray-500 cursor-pointer hover:text-gray-700"
+              onClick={() => navigate('/')}
+            >
               Home
             </span>
             {' > '}
-            <span className="text-gray-700">Products</span>
+            <span className="text-gray-700">Items</span>
           </div>
-          <h1 className="text-4xl font-bold text-center my-8">Featured Products</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {Array.isArray(products) &&
-              products.map((product, index) => (
-                <div
-                  key={index}
-                  className="max-w-sm rounded overflow-hidden m-2 relative cursor-pointer"
-                  style={{ height: '500px' }}
-                  onClick={() => handleProductClick(product)}
-                >
-                  <img src={product.imageUrl} alt={product.name} style={{ height: '250px' }} className="w-full h-full object-cover" />
-                  <div className="px-6 py-4">
-                    <div className="font-bold text-xl mb-2">{product.name}</div>
-                    <p className="text-gray-700 text-base">{product.description}</p>
-                  </div>
-                  <div className="flex space-between gap-2 px-6">
-                    {product.colors.map((color, i) => (
-                      <span
-                        key={i}
-                        className={`inline-block align-middle select-none transition duration-150 ease-in-out rounded-full w-6 h-6 mb-1 cursor-pointer hover:border-black border-2`}
-                        style={{ backgroundColor: color, borderColor: 'transparent' }}
-                      ></span>
-                    ))}
-                  </div>
+          <h1 className="text-4xl font-bold text-center my-8">Featured Items</h1>
+          <div className="flex flex-wrap justify-center gap-4">
+            {Array.isArray(items) && items.map((item) => (
+              <div
+                key={item}  
+                className="w-full md:w-1/2 lg:w-1/3 max-w-sm rounded overflow-hidden m-2 relative cursor-pointer"
+                style={{ height: '500px' }}
+                onClick={() => handleItemClick(item)}
+              >
+                <img
+                  src={` https://timbu-get-all-products.reavdev.workers.dev/?organization_id=3e18e5e79afc4cac99ac8888a3604ad6&reverse_sort=false&Appid=MWI4OACDIIGXES0&Apikey=646be48f0b9c48808c9d50f57c7a011920240713004633461578&page=1&size=30'${items.photos[0].url}`}
+                  alt={item.name}
+                  style={{ height: '250px' }}
+                  className="w-full h-full object-cover"
+                />
+                <div className="px-6 py-4">
+                  <div className="font-bold text-xl mb-2">{item.name}</div>
+                  <p className="text-gray-700 text-base">{item.description}</p>
+                  <p className="text-gray-700 text-base">{item.price}</p>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
-          <div className="flex justify-between items-center mt-4">
-            <button onClick={handlePrevPage} className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800" disabled={page === 1}>
-              Previous
-            </button>
-            <button onClick={handleNextPage} className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800">
-              Next
-            </button>
+
+          <div className="flex justify-center items-center mt-4">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={`mx-2 px-4 py-2 rounded ${currentPage === i + 1 ? 'bg-gray-900 text-white' : 'bg-gray-300 text-black'} hover:bg-gray-800 hover:text-white`}
+              >
+                {i + 1}
+              </button>
+            ))}
           </div>
           <div className="flex justify-center items-center mt-4">
-            <button onClick={() => navigate('/cart')} className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800">
+            <button
+              onClick={() => navigate('/cart')}
+              className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800"
+            >
               View Cart
             </button>
           </div>
-          {selectedProduct && (
+          {selectedItem && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
               <div className="bg-white rounded-lg overflow-hidden max-w-lg w-full p-4 relative">
-                <button onClick={handleCloseModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">
+                <button
+                  onClick={handleCloseModal}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
+                >
                   &times;
                 </button>
                 <div className="text-center">
-                  <img src={selectedProduct.imageUrl} alt={selectedProduct.name} className="mx-auto my-4 w-full h-64 object-cover" />
-                  <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
-                  <p className="text-gray-700 mb-4">{selectedProduct.description}</p>
-                  <div className="flex justify-center gap-2 mb-4">
-                    {selectedProduct.colors.map((color, i) => (
-                      <span
-                        key={i}
-                        className={`inline-block align-middle select-none transition duration-150 ease-in-out rounded-full w-6 h-6 mb-1 cursor-pointer hover:border-black border-2`}
-                        style={{ backgroundColor: color, borderColor: 'transparent' }}
-                      ></span>
-                    ))}
-                  </div>
-                  <button onClick={() => handleAddToCart(selectedProduct)} className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800 flex items-center justify-center mx-auto">
+                  <img
+                    src={` https://timbu-get-all-products.reavdev.workers.dev/?organization_id=3e18e5e79afc4cac99ac8888a3604ad6&reverse_sort=false&Appid=MWI4OACDIIGXES0&Apikey=646be48f0b9c48808c9d50f57c7a011920240713004633461578&page=1&size=30'${selectedItem.photos[0].url}`}
+                    alt={selectedItem.name}
+                    className="mx-auto my-4 w-full h-64 object-cover"
+                  />
+                  <h2 className="text-2xl font-bold mb-2">{selectedItem.name}</h2>
+                  <p className="text-gray-700 mb-4">{selectedItem.description}</p>
+                  <p className="text-gray-700 mb-4">{selectedItem.price}</p>
+                  <button
+                    onClick={() => handleAddToCart(selectedItem)}
+                    className="bg-gray-900 text-white px-6 py-2 rounded hover:bg-gray-800 flex items-center justify-center mx-auto"
+                  >
                     <FaShoppingCart className="mr-2" /> Add to Cart
                   </button>
                 </div>
